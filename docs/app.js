@@ -13,7 +13,7 @@
 
 /* ---------- ส่วนที่ 1 CONFIG ---------- */
 const CONFIG = {
-  demo: false,                                   // false เมื่อใช้ข้อมูลจริง
+  demo: true,                                   // false เมื่อใช้ข้อมูลจริง
   districtsUrl: 'data/demo_districts.geojson',  // → 'data/korat_drought_districts.geojson'
   provinceUrl:  'data/demo_province.csv',       // → 'data/korat_drought_province.csv'
   pngDir: 'data/png/',
@@ -50,18 +50,18 @@ const state = { index: CONFIG.startIndex, year: CONFIG.startYear, years: [],
                 selected: null, timer: null, data: null, province: [] };
 
 /* ---------- ส่วนที่ 3 Map + basemap ---------- */
-// Keyless raster basemaps. Check each provider's usage policy before heavy use.
+// Keyless raster basemaps (Esri). OSM's public tile servers are not used:
+// they block apps that do not follow the OSM tile usage policy (HTTP 403).
+const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
 const BASEMAPS = {
-  'osm-gray': { label: 'OSM โทนเทา', on: true,
-    tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], maxzoom: 19,
-    paint: { 'raster-saturation': -1, 'raster-brightness-min': 0.1 },
-    attribution: '© OpenStreetMap contributors' },
-  'osm': { label: 'OSM สี', on: false,
-    tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], maxzoom: 19, paint: {},
-    attribution: '© OpenStreetMap contributors' },
+  'esri-gray': { label: 'แผนที่โทนเทา (Esri Light Gray)', on: true,
+    tiles: [ESRI + 'Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'], maxzoom: 16, paint: {},
+    attribution: 'Tiles © Esri — Esri and its data providers' },
+  'esri-street': { label: 'แผนที่ถนน (Esri Street)', on: false,
+    tiles: [ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}'], maxzoom: 18, paint: {},
+    attribution: 'Tiles © Esri — Esri and its data providers' },
   'esri-imagery': { label: 'ภาพดาวเทียม (Esri)', on: false,
-    tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-    maxzoom: 19, paint: {},
+    tiles: [ESRI + 'World_Imagery/MapServer/tile/{z}/{y}/{x}'], maxzoom: 18, paint: {},
     attribution: 'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community' }
 };
 const baseSources = {}, baseLayers = [];
